@@ -18,14 +18,9 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
-# options=webdriver.Chrome() hadi katkhsr pogramme
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-# driver = webdriver.Chrome(options=options)
-# driver=webdriver.Chrome(executable_path=r'C:\Users\DELL\Desktop\chromedriver.exe', chrome_options=options)
-# driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 chrome_options = webdriver.ChromeOptions()
-# chrome_options.add_argument('--headless')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument(
     "user-data-dir=C:/Users/DELL/AppData/Local/Google/Chrome/User Data")
@@ -40,36 +35,35 @@ url = "https://comparatif-tarifs-bancaires.ma/fr/page/comparatif_bancaire?popup=
 driver.get(url)
 time.sleep(1)
 body = driver.find_element(By.TAG_NAME,"body")
+# scroll down 
 body.send_keys(Keys.ARROW_DOWN)
 body.send_keys(Keys.ARROW_DOWN)
-# Scroll down by a certain number of pixels
-scroll_pixels = 400
-# driver.execute_script(f"window.scrollBy(0, {scroll_pixels});")
 time.sleep(2)
 element_id = "comparatifBlock"
-btn= driver.find_element(By.ID, element_id).click() #comparatif bancaire
+btn= driver.find_element(By.ID, element_id).click() #Choix comparatif bancaire
 time.sleep(2)
 body.send_keys(Keys.ARROW_DOWN)
 body.send_keys(Keys.ARROW_DOWN)
-
+# form of 'Selectionner Categorie'
 form0 = "#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-categorie.form-item-categorie > div > button"
 driver.find_element(By.CSS_SELECTOR,form0).click()
-
 time.sleep(2)
-
+# first option 
 form0option0="#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-categorie.form-item-categorie > div > ul > li:nth-child(1)"
 driver.find_element(By.CSS_SELECTOR,form0option0).click()
 body.send_keys(Keys.ARROW_DOWN)
 body.send_keys(Keys.ARROW_DOWN)
 time.sleep(2)
+# form of 'Choisissez votre catégorie d'opérations et de produits'
 form1="#state-categorie-operation > div > div.btn-group > button"
 driver.find_element(By.CSS_SELECTOR,form1).click()
 time.sleep(2)
-# option 0 of  is ignored 
+# option 0 of  is ignored  for now 
 form1option1 = "#state-categorie-operation > div > div.btn-group.show > ul > li:nth-child(2)"
 driver.find_element(By.CSS_SELECTOR, form1option1).click()
 body.send_keys(Keys.ARROW_DOWN)
 body.send_keys(Keys.ARROW_DOWN)
+# form of 'Choisissez vos critères de recherche'
 form2 = "#state-type-produit > div > div.btn-group > button"
 driver.find_element(By.CSS_SELECTOR, form2).click()
 time.sleep(2)
@@ -82,10 +76,11 @@ time.sleep(4)
 form3 = "#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-canal.form-item-canal > div.btn-group"
 driver.find_element(By.CSS_SELECTOR, form3).click()
 time.sleep(2)
+#Choix du canal
 form3option0= "#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-canal.form-item-canal > div.btn-group.show > ul > li:nth-child(1)"
 driver.find_element(By.CSS_SELECTOR, form3option0).click()
 time.sleep(4)
-# Choisissez votre banque 
+# Choix du banque 
 
 
 btn_Cih = ".form-item-comparatif-bancaire-banques-list-{}"
@@ -128,6 +123,7 @@ btn_SocieteGenerale = btn_SocieteGenerale.format(SocieteGenerale_id)
 btn_CDG = btn_CDG.format(CDG_id)
 btn_Chaabi = btn_Chaabi.format(Chaabi_id)
 
+#list of banks buttons 
 btns = [btn_Cih, btn_ArabBank, btn_Attijari, btn_CreditDuMaroc, btn_CreditAgricoleDuMaroc, btn_Bmci, btn_BaridBank,
         btn_Bmce, btn_Cfg, btn_SocieteGenerale, btn_CDG, btn_Chaabi]
 # we click on all banks
@@ -139,77 +135,21 @@ body.send_keys(Keys.ARROW_DOWN)
 # on click pour  generer les tarifs 
 
 driver.find_element(By.ID,"edit-submit").click()
+#wait for elements to load
 time.sleep(10)
 
-# Find the element with the ID "accordion"
+#identify the panel-body
 element = driver.find_element(By.CLASS_NAME, "panel-body")
-image_paths = []
 table = element.find_element(By.ID, "tableau_source44")
-columns = table.find_elements(By.CSS_SELECTOR, 'tr[bgcolor="#FFFFFF"]')
+rows = table.find_elements(By.CSS_SELECTOR, 'tr[bgcolor="#FFFFFF"]')
 data_dict = {}
 
-for column in columns:
-    image_place = column.find_element(By.CSS_SELECTOR, 'img')
+for row in rows:
+    image_place = row.find_element(By.CSS_SELECTOR, 'img')
     image_path = image_place.get_attribute('src')
-    image_paths.append(image_path)
-    service = column.find_element(By.CSS_SELECTOR, "span.text-black-softnew").text
-    print("Image Path:", image_path)
-    print("Service:", service)
+    service = row.find_element(By.CSS_SELECTOR, "span.text-black-softnew").text
     data_dict[image_path] = service
-
-
-        
-
-
-
 print(data_dict)
-# except:
-#     #   Element not found
-#     print("there is no result to this search")
-#     # Do something if there is no element
-
-     
-
-
-# except:
-#     # Element not found
-#     print("there is no result to this search")
-#     # Do something if there is no element
-#     result = False
-
-# print(result)
-# lets go back 
-# driver.back()
-# form3 = "#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-canal.form-item-canal > div.btn-group"
-# driver.find_element(By.CSS_SELECTOR, form3).click()
-# time.sleep(2)
-# form3option1= "#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-canal.form-item-canal > div.btn-group.show > ul > li:nth-child(2)"
-# driver.find_element(By.CSS_SELECTOR, form3option1).click()
-# time.sleep(4)
-# try:
-#     # Find the element with the ID "accordion"
-#     element = driver.find_element(By.CLASS_NAME,"panel-body")
-    
-#     # Element found, do something if needed
-#     result = True
-# except:
-#     # Element not found
-#     print("there is no result to this search")
-#     # Do something if there is no element
-#     result = False
-
-# print(result)
-
-
-
-
-
-
-
-
-
-
-
 
 
 time.sleep(8)
