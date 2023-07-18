@@ -1,6 +1,8 @@
 
 from PIL import Image
 import os
+import json
+
 import time
 from selenium.webdriver.common.action_chains import ActionChains
 import pyperclip
@@ -32,6 +34,49 @@ chrome_options.add_argument("--headless")
 # Disable GPU acceleration (optional)
 chrome_options.add_argument("--disable-gpu")
 url = "https://comparatif-tarifs-bancaires.ma/fr/page/comparatif_bancaire?popup=true"
+btn_Cih = ".form-item-comparatif-bancaire-banques-list-{}"
+btn_ArabBank = ".form-item-comparatif-bancaire-banques-list-{}"
+btn_Attijari = ".form-item-comparatif-bancaire-banques-list-{}"
+btn_CreditDuMaroc = ".form-item-comparatif-bancaire-banques-list-{}"
+btn_CreditAgricoleDuMaroc = ".form-item-comparatif-bancaire-banques-list-{}"
+btn_Bmci = ".form-item-comparatif-bancaire-banques-list-{}"
+btn_BaridBank = ".form-item-comparatif-bancaire-banques-list-{}"
+btn_Bmce = ".form-item-comparatif-bancaire-banques-list-{}"
+btn_Cfg = ".form-item-comparatif-bancaire-banques-list-{}"
+btn_SocieteGenerale = ".form-item-comparatif-bancaire-banques-list-{}"
+btn_CDG = ".form-item-comparatif-bancaire-banques-list-{}"
+btn_Chaabi = ".form-item-comparatif-bancaire-banques-list-{}"
+
+Cih_id = 3157
+ArabBank_id = 37659
+Attijari_id = 3167
+CreditDuMaroc_id = 3155
+CreditAgricoleDuMaroc_id = 12316
+Bmci_id = 3161
+BaridBank_id = 3162
+Bmce_id = 3164
+Cfg_id = 3158
+SocieteGenerale_id = 3127
+CDG_id = 39327
+Chaabi_id = 3159
+
+# Construct the full identifier using string formatting
+btn_Cih = btn_Cih.format(Cih_id)
+btn_ArabBank = btn_ArabBank.format(ArabBank_id)
+btn_Attijari = btn_Attijari.format(Attijari_id)
+btn_CreditDuMaroc = btn_CreditDuMaroc.format(CreditDuMaroc_id)
+btn_CreditAgricoleDuMaroc = btn_CreditAgricoleDuMaroc.format(CreditAgricoleDuMaroc_id)
+btn_Bmci = btn_Bmci.format(Bmci_id)
+btn_BaridBank = btn_BaridBank.format(BaridBank_id)
+btn_Bmce = btn_Bmce.format(Bmce_id)
+btn_Cfg = btn_Cfg.format(Cfg_id)
+btn_SocieteGenerale = btn_SocieteGenerale.format(SocieteGenerale_id)
+btn_CDG = btn_CDG.format(CDG_id)
+btn_Chaabi = btn_Chaabi.format(Chaabi_id)
+
+#list of banks buttons 
+btns = [btn_Cih, btn_ArabBank, btn_Attijari, btn_CreditDuMaroc, btn_CreditAgricoleDuMaroc, btn_Bmci, btn_BaridBank,
+        btn_Bmce, btn_Cfg, btn_SocieteGenerale, btn_CDG, btn_Chaabi]
 driver.get(url)
 time.sleep(1)
 body = driver.find_element(By.TAG_NAME,"body")
@@ -83,49 +128,7 @@ time.sleep(4)
 # Choix du banque 
 
 
-btn_Cih = ".form-item-comparatif-bancaire-banques-list-{}"
-btn_ArabBank = ".form-item-comparatif-bancaire-banques-list-{}"
-btn_Attijari = ".form-item-comparatif-bancaire-banques-list-{}"
-btn_CreditDuMaroc = ".form-item-comparatif-bancaire-banques-list-{}"
-btn_CreditAgricoleDuMaroc = ".form-item-comparatif-bancaire-banques-list-{}"
-btn_Bmci = ".form-item-comparatif-bancaire-banques-list-{}"
-btn_BaridBank = ".form-item-comparatif-bancaire-banques-list-{}"
-btn_Bmce = ".form-item-comparatif-bancaire-banques-list-{}"
-btn_Cfg = ".form-item-comparatif-bancaire-banques-list-{}"
-btn_SocieteGenerale = ".form-item-comparatif-bancaire-banques-list-{}"
-btn_CDG = ".form-item-comparatif-bancaire-banques-list-{}"
-btn_Chaabi = ".form-item-comparatif-bancaire-banques-list-{}"
 
-Cih_id = 3157
-ArabBank_id = 37659
-Attijari_id = 3167
-CreditDuMaroc_id = 3155
-CreditAgricoleDuMaroc_id = 12316
-Bmci_id = 3161
-BaridBank_id = 3162
-Bmce_id = 3164
-Cfg_id = 3158
-SocieteGenerale_id = 3127
-CDG_id = 39327
-Chaabi_id = 3159
-
-# Construct the full identifier using string formatting
-btn_Cih = btn_Cih.format(Cih_id)
-btn_ArabBank = btn_ArabBank.format(ArabBank_id)
-btn_Attijari = btn_Attijari.format(Attijari_id)
-btn_CreditDuMaroc = btn_CreditDuMaroc.format(CreditDuMaroc_id)
-btn_CreditAgricoleDuMaroc = btn_CreditAgricoleDuMaroc.format(CreditAgricoleDuMaroc_id)
-btn_Bmci = btn_Bmci.format(Bmci_id)
-btn_BaridBank = btn_BaridBank.format(BaridBank_id)
-btn_Bmce = btn_Bmce.format(Bmce_id)
-btn_Cfg = btn_Cfg.format(Cfg_id)
-btn_SocieteGenerale = btn_SocieteGenerale.format(SocieteGenerale_id)
-btn_CDG = btn_CDG.format(CDG_id)
-btn_Chaabi = btn_Chaabi.format(Chaabi_id)
-
-#list of banks buttons 
-btns = [btn_Cih, btn_ArabBank, btn_Attijari, btn_CreditDuMaroc, btn_CreditAgricoleDuMaroc, btn_Bmci, btn_BaridBank,
-        btn_Bmce, btn_Cfg, btn_SocieteGenerale, btn_CDG, btn_Chaabi]
 # we click on all banks
 for btn in btns:
     driver.find_element(By.CSS_SELECTOR, btn).click()
@@ -148,8 +151,54 @@ for row in rows:
     image_place = row.find_element(By.CSS_SELECTOR, 'img')
     image_path = image_place.get_attribute('src')
     service = row.find_element(By.CSS_SELECTOR, "span.text-black-softnew").text
+    if (image_path == "https://comparatif-tarifs-bancaires.ma/sites/default/files/banques/AlbaridBank_Couleurs_0.png") :
+        image_path = " AL barid banque"
+    
+    if (image_path == "https://comparatif-tarifs-bancaires.ma/sites/default/files/banques/CIH_Couleurs_0.png") :
+        image_path = " CIH"
+    
+    if (image_path == "https://comparatif-tarifs-bancaires.ma/sites/default/files/banques/Logo%20CAM.png") :
+        image_path = " Credit Agricole du Maroc"
+    
+    if (image_path == "https://comparatif-tarifs-bancaires.ma/sites/default/files/banques/CDGCapital_Couleursnew.png") :
+        image_path = " CDG Capital "
+    
+    if (image_path == "https://comparatif-tarifs-bancaires.ma/sites/default/files/banques/CFGBank_Couleurs_0.png") :
+        image_path = " CFG "
+    
+    if (image_path == "https://comparatif-tarifs-bancaires.ma/sites/default/files/banques/logo-sg-200x90-couleur.png") :
+        image_path = " Societe generale "
+    
+    if (image_path == "https://comparatif-tarifs-bancaires.ma/sites/default/files/banques/LOGO-BP-COULEUR.png") :
+        image_path = " Banque populaire "
+    
+    if (image_path == "https://comparatif-tarifs-bancaires.ma/sites/default/files/banques/BMCI_Couleurs_0.png") :
+        image_path = " BMCI "
+    
+    if (image_path == "https://comparatif-tarifs-bancaires.ma/sites/default/files/banques/CDM%20couleur.png") :
+        image_path = " CDM "
+    
+    if (image_path == "https://comparatif-tarifs-bancaires.ma/sites/default/files/banques/AttijariWafaBank_Couleurs_0.png") :
+        image_path = " AttijariWafaBank"
+    if (image_path == "https://comparatif-tarifs-bancaires.ma/sites/default/files/banques/ArabBank_Couleurs_1.png") :
+        image_path = " ArabeBank"
+    if (image_path == "https://comparatif-tarifs-bancaires.ma/sites/default/files/banques/BankOfAfrica_Couleurs_0.png") :
+        image_path = " Bank of Africa"
+    
     data_dict[image_path] = service
 print(data_dict)
+
+# Your existing code...
+
+# Create a file path for the JSON file on your desktop
+json_file_path = os.path.expanduser('C:/Users/DELL/Desktop')
+
+# Store the data_dict in a JSON file
+with open(json_file_path, 'w') as json_file:
+    json.dump(data_dict, json_file)
+
+# Your existing code...
+
 
 
 time.sleep(8)
