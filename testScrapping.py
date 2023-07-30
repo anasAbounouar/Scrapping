@@ -1,4 +1,3 @@
-
 from PIL import Image
 import os
 import json
@@ -20,10 +19,12 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+
 chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument('--no-sandbox')
+chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument(
-    "user-data-dir=C:/Users/DELL/AppData/Local/Google/Chrome/User Data")
+    "user-data-dir=C:/Users/DELL/AppData/Local/Google/Chrome/User Data"
+)
 driver = webdriver.Edge(r"msedgedriver.exe")
 chrome_options.add_argument("--headless")
 # Disable GPU acceleration (optional)
@@ -69,18 +70,48 @@ btn_SocieteGenerale = btn_SocieteGenerale.format(SocieteGenerale_id)
 btn_CDG = btn_CDG.format(CDG_id)
 btn_Chaabi = btn_Chaabi.format(Chaabi_id)
 
-#list of banks buttons 
-btns = [btn_Cih, btn_ArabBank, btn_Attijari, btn_CreditDuMaroc, btn_CreditAgricoleDuMaroc, btn_Bmci, btn_BaridBank,
-        btn_Bmce, btn_Cfg, btn_SocieteGenerale, btn_CDG, btn_Chaabi]
+# list of banks buttons
+btns = [
+    btn_Cih,
+    btn_ArabBank,
+    btn_Attijari,
+    btn_CreditDuMaroc,
+    btn_CreditAgricoleDuMaroc,
+    btn_Bmci,
+    btn_BaridBank,
+    btn_Bmce,
+    btn_Cfg,
+    btn_SocieteGenerale,
+    btn_CDG,
+    btn_Chaabi,
+]
 driver.get(url)
 time.sleep(1)
-body = driver.find_element(By.TAG_NAME,"body")
-# scroll down 
+body = driver.find_element(By.TAG_NAME, "body")
+# scroll down
 body.send_keys(Keys.ARROW_DOWN)
 body.send_keys(Keys.ARROW_DOWN)
 time.sleep(2)
 element_id = "comparatifBlock"
-btn= driver.find_element(By.ID, element_id).click() #Choix comparatif bancaire
+# btn= driver.find_element(By.ID, element_id).click() #Choix comparatif bancaire
+from selenium.common.exceptions import NoSuchElementException
+
+# ...
+
+element_id = "comparatifBlock"
+timeout = 10  # Maximum time to wait in seconds
+try:
+    element = WebDriverWait(driver, timeout).until(
+        EC.element_to_be_clickable((By.ID, element_id))
+    )
+except Exception as e:
+    print(f"Error occurred while waiting for element: {e}")
+    driver.quit()  # Quit the driver if the element is not found
+else:
+    # Click the element once it becomes clickable
+    element.click()
+# Additional actions to perform after clicking the element, if needed
+
 time.sleep(2)
 body.send_keys(Keys.ARROW_DOWN)
 body.send_keys(Keys.ARROW_DOWN)
@@ -89,71 +120,132 @@ for btn in btns:
 time.sleep(2)
 body.send_keys(Keys.ARROW_UP)
 body.send_keys(Keys.ARROW_UP)
+body.send_keys(Keys.ARROW_UP)
+body.send_keys(Keys.ARROW_UP)
+body.send_keys(Keys.ARROW_UP)
+body.send_keys(Keys.ARROW_UP)
 # form of 'Selectionner Categorie'
 time.sleep(2)
-# first option 
+# first option
 form0 = "#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-categorie.form-item-categorie > div > button"
-form0options=driver.find_elements(By.CSS_SELECTOR,"#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-categorie.form-item-categorie > div > ul > li")
-print("im printing all the options")
-print(form0options)
-S=0
-  # we click on all banks
-while (S<len(form0options)):
-    form0options=driver.find_elements(By.CSS_SELECTOR,"#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-categorie.form-item-categorie > div > ul > li")
-    driver.find_element(By.CSS_SELECTOR,form0).click()
-    print("i clicked the form0")
+form0options = driver.find_elements(
+    By.CSS_SELECTOR,
+    "#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-categorie.form-item-categorie > div > ul > li",
+)
+S = 0
+# we click on all banks
+def new_func(form1options, j):
+    form1options[j].click()
+
+while S < len(form0options):
+    form0options = driver.find_elements(
+        By.CSS_SELECTOR,
+        "#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-categorie.form-item-categorie > div > ul > li",
+    )
+    form0 = "#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-categorie.form-item-categorie > div > button"
+    driver.find_element(By.CSS_SELECTOR, form0).click()
     time.sleep(2)
-    for i in range (0,S+1):
+    for i in range(max(S - 1, 0), S + 1):
         form0options[i].click()
-    print("i clicked the first option in form0")
     time.sleep(2)
+    print("form0 options is clicked")
 
-    form1="#state-categorie-operation > div > div.btn-group > button"
-    driver.find_element(By.CSS_SELECTOR,form1).click()
-    time.sleep(2)
-    # option 0 of  is ignored  for now 
-    
-    form1option1 = "#state-categorie-operation > div > div.btn-group.show > ul > li:nth-child(2)"
-    driver.find_element(By.CSS_SELECTOR, form1option1).click()
-    # form of 'Choisissez vos critères de recherche'
-    form2 = "#state-type-produit > div > div.btn-group > button"
-    driver.find_element(By.CSS_SELECTOR, form2).click()
-    time.sleep(2)
-    driver.find_element(By.CSS_SELECTOR, form2).click()
-    time.sleep(2)
-    form2option1= "#state-type-produit > div > div.btn-group.open.show > ul > li:nth-child(3)"
-    driver.find_element(By.CSS_SELECTOR, form2option1).click()
-    time.sleep(4)
-    form3 = "#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-canal.form-item-canal > div.btn-group"
-    driver.find_element(By.CSS_SELECTOR, form3).click()
-    time.sleep(2)
-    #Choix du canal
-    form3option0= "#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-canal.form-item-canal > div.btn-group > ul > li:nth-child(1)"
-    driver.find_element(By.CSS_SELECTOR, form3option0).click()
-    time.sleep(4)
-    # Choix du banque 
+    form1options = driver.find_elements(
+        By.CSS_SELECTOR,
+        "#state-categorie-operation > div > div.btn-group > ul > li",
+    )
+    S1 = 1
+    while S1 < len(form1options):
+        form1options = driver.find_elements(
+            By.CSS_SELECTOR,
+            "#state-categorie-operation > div > div.btn-group > ul > li",
+        )
+        time.sleep(2)
+        form1="#state-categorie-operation > div > div.btn-group > button"
+        time.sleep(2)
+        driver.find_element(
+            By.CSS_SELECTOR, form1
+        ).click()
+        time.sleep(5)
+        # form1options[S1].click()
+        for j in range (max(S1-1,1),S1+1):
+            form1options[j].click()
+        time.sleep(2)
+        print ("form1 options clicked")
+        time.sleep(2)
+        form2 = "#state-type-produit > div > div.btn-group > button"
+        driver.find_element(By.CSS_SELECTOR, form2).click()
+        time.sleep(4)
+        S2=2
+        form2options = driver.find_elements(
+        By.CSS_SELECTOR,
+        "#state-type-produit > div > div.btn-group.show > ul > li",
+        )
+        form2 = "#state-type-produit > div > div.btn-group > button"
+        while S2 < len(form2options):
+            print("S2:", S2)
+            print("i entrred the while")
+            form2options = driver.find_elements(
+        By.CSS_SELECTOR,
+        "#state-type-produit > div > div.btn-group.show > ul > li",
+        )
+            time.sleep(2)
+            
+            form2 = "#state-type-produit > div > div.btn-group > button"
+            driver.find_element(By.CSS_SELECTOR, form2).click()
+            print("i lcicked the form2")
+            time.sleep(2)
+            driver.find_element(By.CSS_SELECTOR, form2).click()
+            time.sleep(2)
+            if (S2==2):
+                form2options[S2].click()
+            else:
+                form2options[S2-1].click()
+                time.sleep(2)
+                form2options[S2].click()
+            # for j in range (max(S2-1,2),S2+1):
+            #     form2options[j].click()
+            print ("form2 options clicked")
+            print(form2options)
+            time.sleep(4)
+            form3options = driver.find_elements(
+        By.CSS_SELECTOR,
+                "#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-canal.form-item-canal > div.btn-group > ul > li",
+            )
+            S3 = 0
+            while S3< len(form3options):
+                form3 = "#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-canal.form-item-canal > div.btn-group"
+                driver.find_element(By.CSS_SELECTOR, form3).click()
+                time.sleep(2)
+                form3options = driver.find_elements(
+        By.CSS_SELECTOR,
+                "#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-canal.form-item-canal > div.btn-group > ul > li",
+            )
+                # Choix du canal
+                #radio 
+                form3options[S3].click()
+                
+                time.sleep(4)
+                # Choix du banque
+                # on click pour  generer les tarifs
 
+                driver.find_element(By.ID, "edit-submit").click()
+                # wait for elements to load
+                time.sleep(10)
+                # identify the panel-body
+                table = driver.find_element(By.ID, "tableau_source44")
+                rows = table.find_elements(By.CSS_SELECTOR, 'tr[bgcolor="#FFFFFF"]')
+                data_dict = {}
+                S3+=1
+                driver.back()
+                time.sleep(8)
+            S2+=1
+            driver.back()
+            time.sleep(8)
+        S1 += 1
 
-
-
-    # on click pour  generer les tarifs 
-
-    driver.find_element(By.ID,"edit-submit").click()
-    #wait for elements to load
-    time.sleep(10)
-    #identify the panel-body
-    table = driver.find_element(By.ID, "tableau_source44")
-    rows = table.find_elements(By.CSS_SELECTOR, 'tr[bgcolor="#FFFFFF"]')
-    data_dict = {}
-    print(S)
+        driver.back()
+        time.sleep(8)
     S+=1
-
     driver.back()
-    
-
-
-
-
-
-
     time.sleep(8)
