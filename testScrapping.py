@@ -270,13 +270,13 @@ while S < len(form0options):
                 # wait for elements to load
                 time.sleep(6)
                 # identify the panel-body
-                table = driver.find_element(By.ID, "tableau_source44")
+                table = driver.find_element(By.ID, "tableau_source37080")
                 dataToExport = [
                     table,
                     form0,
                     form0options[S],
                     form1,
-                    form1options[S],
+                    form1options[S1],
                     form2,
                     form2options[S2],
                     form3,
