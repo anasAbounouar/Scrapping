@@ -1,6 +1,7 @@
 from PIL import Image
 import os
 import json
+import csv
 import time
 from selenium.webdriver.common.action_chains import ActionChains
 import pyperclip
@@ -114,29 +115,29 @@ else:
 time.sleep(2)
 for i in range(6):
     body.send_keys(Keys.ARROW_DOWN)
-# lets select all the banks and click them 
+# lets select all the banks and click them
 for btn in btns:
     driver.find_element(By.CSS_SELECTOR, btn).click()
     time.sleep(0.01)
-time.sleep(2)
+time.sleep(10)
 for i in range(10):
     body.send_keys(Keys.ARROW_UP)
 
 time.sleep(1)
 # first form
 form0 = "#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-categorie.form-item-categorie > div > button"
-# options of first form 
+# options of first form
 form0options = driver.find_elements(
     By.CSS_SELECTOR,
     "#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-categorie.form-item-categorie > div > ul > li",
 )
 S = 0
 while S < len(form0options):
-    # we might face the pop up 
+    # we might face the pop up
     try:
         element = WebDriverWait(driver, timeout).until(
-        EC.element_to_be_clickable((By.ID, element_id))
-    )
+            EC.element_to_be_clickable((By.ID, element_id))
+        )
     except Exception as e:
         print(f"Error occurred while waiting for element: {e}")
     else:
@@ -148,7 +149,7 @@ while S < len(form0options):
         "#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-categorie.form-item-categorie > div > ul > li",
     )
     form0 = "#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-categorie.form-item-categorie > div > button"
-    # let us click on the form 
+    # let us click on the form
     driver.find_element(By.CSS_SELECTOR, form0).click()
     time.sleep(1)
     # we want to start from the first option (S=0)
@@ -158,7 +159,7 @@ while S < len(form0options):
         # lets deselect the previous option
         form0options[S - 1].click()
         time.sleep(1)
-        # thenk lets click 
+        # thenk lets click
         form0options[S].click()
     time.sleep(1)
     print("form0 options is clicked")
@@ -170,11 +171,11 @@ while S < len(form0options):
     S1 = 1
     # S1 == 1 because we dont wanna start with the first option (tout selectionner)
     while S1 < len(form1options):
-        # we might face the pop up 
+        # we might face the pop up
         try:
             element = WebDriverWait(driver, timeout).until(
-            EC.element_to_be_clickable((By.ID, element_id))
-        )
+                EC.element_to_be_clickable((By.ID, element_id))
+            )
         except Exception as e:
             print(f"Error occurred while waiting for element: {e}")
         else:
@@ -207,11 +208,11 @@ while S < len(form0options):
         S2 = 2
         # we dont wanna choose the 2 first options (deselectionner tout ..)
         while S2 < len(form2options):
-            # we might face the pop up 
+            # we might face the pop up
             try:
                 element = WebDriverWait(driver, timeout).until(
-                EC.element_to_be_clickable((By.ID, element_id))
-            )
+                    EC.element_to_be_clickable((By.ID, element_id))
+                )
             except Exception as e:
                 print(f"Error occurred while waiting for element: {e}")
             else:
@@ -233,10 +234,10 @@ while S < len(form0options):
             if S2 == 2:
                 form2options[S2].click()
             else:
-                # lets deselect the previous choice 
+                # lets deselect the previous choice
                 form2options[S2 - 1].click()
                 time.sleep(1)
-                # lets click now 
+                # lets click now
                 form2options[S2].click()
             time.sleep(2)
             form3options = driver.find_elements(
@@ -261,17 +262,35 @@ while S < len(form0options):
                     By.CSS_SELECTOR,
                     "#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-canal.form-item-canal > div.btn-group > ul > li",
                 )
-                # because it is a radio , we dont need to deselect previous option 
+                # because it is a radio , we dont need to deselect previous option
                 form3options[S3].click()
                 time.sleep(1)
-                # submit 
+                # submit
                 driver.find_element(By.ID, "edit-submit").click()
                 # wait for elements to load
                 time.sleep(6)
                 # identify the panel-body
                 table = driver.find_element(By.ID, "tableau_source44")
-                rows = table.find_elements(By.CSS_SELECTOR, 'tr[bgcolor="#FFFFFF"]')
-                data_dict = {}
+                dataToExport = [
+                    table,
+                    form0,
+                    form0options[S],
+                    form1,
+                    form1options[S],
+                    form2,
+                    form2options[S2],
+                    form3,
+                    form3options,
+                    [S3],
+                ]
+                # Get the inner HTML of the panel-body element
+                panel_body_content = table.get_attribute("innerHTML")
+                # rows = table.find_elements(By.CSS_SELECTOR, 'tr[bgcolor="#FFFFFF"] > td:nth-child(2)')
+                # for row in rows:
+                #         row_html = row.get_attribute('innerHTML')  # Get the inner HTML of the row
+                #         print(row_html)
+                # Array = []
+                print(dataToExport)
                 S3 += 1
                 driver.back()
                 time.sleep(5)
@@ -285,4 +304,3 @@ while S < len(form0options):
     S += 1
     driver.back()
     time.sleep(5)
-
