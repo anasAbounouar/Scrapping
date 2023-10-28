@@ -1,11 +1,6 @@
 from PIL import Image
-import os
-import json
-import csv
 import time
 from selenium.webdriver.common.action_chains import ActionChains
-import pyperclip
-import pyautogui
 from random import randint
 from time import sleep
 from selenium.webdriver.support.ui import Select
@@ -13,7 +8,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
-import json
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
@@ -94,10 +88,7 @@ body.send_keys(Keys.ARROW_DOWN)
 body.send_keys(Keys.ARROW_DOWN)
 time.sleep(2)
 element_id = "comparatifBlock"
-# btn= driver.find_element(By.ID, element_id).click() #Choix comparatif bancaire
 from selenium.common.exceptions import NoSuchElementException
-
-# ...
 
 element_id = "comparatifBlock"
 timeout = 10  # Maximum time to wait in seconds
@@ -106,26 +97,24 @@ try:
         EC.element_to_be_clickable((By.ID, element_id))
     )
 except Exception as e:
-    print(f"Error occurred while waiting for element: {e}")
+    print(f" no pop up ")
 else:
-    # Click the element once it becomes clickable
+    # Click the element if it  exists
     element.click()
-# Additional actions to perform after clicking the element, if needed
-
 time.sleep(2)
 for i in range(6):
     body.send_keys(Keys.ARROW_DOWN)
 # lets select all the banks and click them
 for btn in btns:
     driver.find_element(By.CSS_SELECTOR, btn).click()
-    time.sleep(0.01)
+    time.sleep(0.04)
 time.sleep(10)
 for i in range(10):
     body.send_keys(Keys.ARROW_UP)
-
 time.sleep(1)
-# first form
+# first form button
 form0 = "#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-categorie.form-item-categorie > div > button"
+form0Title = "Sélectionnez votre Catégorie"
 # options of first form
 form0options = driver.find_elements(
     By.CSS_SELECTOR,
@@ -133,15 +122,15 @@ form0options = driver.find_elements(
 )
 S = 0
 while S < len(form0options):
-    # we might face the pop up
+    # in case pop up appears
     try:
         element = WebDriverWait(driver, timeout).until(
             EC.element_to_be_clickable((By.ID, element_id))
         )
     except Exception as e:
-        print(f"Error occurred while waiting for element: {e}")
+        print(f" no pop up ")
     else:
-        # Click the element once it becomes clickable
+        # Click the element if it  exists
         element.click()
 
     form0options = driver.find_elements(
@@ -149,17 +138,17 @@ while S < len(form0options):
         "#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-categorie.form-item-categorie > div > ul > li",
     )
     form0 = "#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-categorie.form-item-categorie > div > button"
-    # let us click on the form
+    # now we click on the form
     driver.find_element(By.CSS_SELECTOR, form0).click()
     time.sleep(1)
     # we want to start from the first option (S=0)
     if S == 0:
         form0options[S].click()
     else:
-        # lets deselect the previous option
+        # lets deselect the previous option because one choice is possible
         form0options[S - 1].click()
         time.sleep(1)
-        # thenk lets click
+        # then  we  click
         form0options[S].click()
     time.sleep(1)
     print("form0 options is clicked")
@@ -177,9 +166,9 @@ while S < len(form0options):
                 EC.element_to_be_clickable((By.ID, element_id))
             )
         except Exception as e:
-            print(f"Error occurred while waiting for element: {e}")
+            print(f" no pop up ")
         else:
-            # Click the element once it becomes clickable
+            # Click the element if it  exists
             element.click()
         # Additional actions to perform after clicking the element, if needed
         form1options = driver.find_elements(
@@ -188,9 +177,9 @@ while S < len(form0options):
         )
         time.sleep(1)
         form1 = "#state-categorie-operation > div > div.btn-group > button"
+        form1Title = "Choisissez votre catégorie d'opérations et de produits "
         driver.find_element(By.CSS_SELECTOR, form1).click()
         time.sleep(1)
-        # form1options[S1].click()
         if S1 == 1:
             form1options[S1].click()
         else:
@@ -198,6 +187,7 @@ while S < len(form0options):
             form1options[S1 - 1].click()
         time.sleep(1)
         form2 = "#state-type-produit > div > div.btn-group > button"
+        form2Title = "Choisissez vos critères de recherche"
         driver.find_element(By.CSS_SELECTOR, form2).click()
         time.sleep(1)
         form2options = driver.find_elements(
@@ -214,19 +204,17 @@ while S < len(form0options):
                     EC.element_to_be_clickable((By.ID, element_id))
                 )
             except Exception as e:
-                print(f"Error occurred while waiting for element: {e}")
+                print(f" no pop up ")
             else:
-                # Click the element once it becomes clickable
+                # Click the element if it  exists
                 element.click()
-            # Additional actions to perform after clicking the element, if needed
-            print("S2:", S2)
             form2options = driver.find_elements(
                 By.CSS_SELECTOR,
                 "#state-type-produit > div > div.btn-group.show > ul > li",
             )
             time.sleep(1)
             form2 = "#state-type-produit > div > div.btn-group > button"
-            # hadi fiha duda kanwrk several times
+            # I click twice ! It needs to be clicked twice .. there is a problem in the website
             driver.find_element(By.CSS_SELECTOR, form2).click()
             time.sleep(1)
             driver.find_element(By.CSS_SELECTOR, form2).click()
@@ -251,45 +239,41 @@ while S < len(form0options):
                         EC.element_to_be_clickable((By.ID, element_id))
                     )
                 except Exception as e:
-                    print(f"Error occurred while waiting for element: {e}")
+                    print(f" no pop up ")
                 else:
-                    # Click the element once it becomes clickable
+                    # Click the element if it  exists
                     element.click()
                 form3 = "#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-canal.form-item-canal > div.btn-group"
+                form3Title = "Choisissez votre canal"
                 driver.find_element(By.CSS_SELECTOR, form3).click()
                 time.sleep(1)
                 form3options = driver.find_elements(
                     By.CSS_SELECTOR,
                     "#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-canal.form-item-canal > div.btn-group > ul > li",
                 )
-                # because it is a radio , we dont need to deselect previous option
+                #  is a radio , we dont need to deselect previous option
                 form3options[S3].click()
                 time.sleep(1)
                 # submit
                 driver.find_element(By.ID, "edit-submit").click()
                 # wait for elements to load
                 time.sleep(6)
-                # identify the panel-body
-                table = driver.find_element(By.ID, "tableau_source37080")
+                # Identify tha table
+                table = driver.find_element(By.XPATH, "//table[@width='100%']")
                 dataToExport = [
-                    table,
-                    form0,
+                    form0Title,
                     form0options[S],
-                    form1,
+                    form1Title,
                     form1options[S1],
-                    form2,
+                    form2Title,
                     form2options[S2],
-                    form3,
+                    form3Title,
                     form3options,
                     [S3],
+                    table,
                 ]
                 # Get the inner HTML of the panel-body element
                 panel_body_content = table.get_attribute("innerHTML")
-                # rows = table.find_elements(By.CSS_SELECTOR, 'tr[bgcolor="#FFFFFF"] > td:nth-child(2)')
-                # for row in rows:
-                #         row_html = row.get_attribute('innerHTML')  # Get the inner HTML of the row
-                #         print(row_html)
-                # Array = []
                 print(dataToExport)
                 S3 += 1
                 driver.back()
@@ -304,3 +288,4 @@ while S < len(form0options):
     S += 1
     driver.back()
     time.sleep(5)
+driver.quit()
