@@ -251,7 +251,7 @@ while S < len(form0options):
                     By.CSS_SELECTOR,
                     "#form-comparatif > div.js-form-item.form-item.js-form-type-select.form-type-select.js-form-item-canal.form-item-canal > div.btn-group > ul > li",
                 )
-                #  is a radio , we dont need to deselect previous option
+                #  is a radio , we don't need to deselect previous option
                 form3options[S3].click()
                 time.sleep(1)
                 # submit
@@ -260,6 +260,7 @@ while S < len(form0options):
                 time.sleep(6)
                 # Identify tha table
                 table = driver.find_element(By.XPATH, "//table[@width='100%']")
+                panel_body_content = table.get_attribute("innerHTML")
                 dataToExport = [
                     form0Title,
                     form0options[S],
@@ -270,7 +271,7 @@ while S < len(form0options):
                     form3Title,
                     form3options,
                     [S3],
-                    table,
+                    panel_body_content,
                 ]
                 # Get the inner HTML of the panel-body element
                 panel_body_content = table.get_attribute("innerHTML")
